@@ -13,8 +13,8 @@ void main() {
     const MethodChannel channel = MethodChannel(
       'app.meedu/flutter_facebook_auth',
     );
-    late FacebookAuth facebookAuth;
-    late bool isLogged, isAutoLogAppEventsEnabled;
+    FacebookAuth facebookAuth;
+    bool isLogged, isAutoLogAppEventsEnabled;
 
     setUp(
       () {

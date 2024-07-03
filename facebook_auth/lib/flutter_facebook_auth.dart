@@ -32,7 +32,7 @@ class FacebookAuth {
   static FacebookAuth getInstance() => FacebookAuth._();
 
   /// if the user is logged return one instance of AccessToken
-  Future<AccessToken?> get accessToken => _authPlatform.accessToken;
+  Future<AccessToken> get accessToken => _authPlatform.accessToken;
 
   /// Express login logs people in with their Facebook account across devices and platform.
   /// If a person logs into your app on Android and then changes devices,
@@ -86,7 +86,7 @@ class FacebookAuth {
     List<String> permissions = const ['email', 'public_profile'],
     LoginBehavior loginBehavior = LoginBehavior.nativeWithFallback,
     LoginTracking loginTracking = LoginTracking.limited,
-    String? nonce,
+    String nonce,
   }) =>
       _authPlatform.login(
         permissions: permissions,
@@ -97,10 +97,10 @@ class FacebookAuth {
 
   /// call this method (ONLY FOR WEB) to initialize the facebook javascript sdk
   Future<void> webAndDesktopInitialize({
-    required String appId,
-    required bool cookie,
-    required bool xfbml,
-    required String version,
+    @required String appId,
+    @required bool cookie,
+    @required bool xfbml,
+    @required String version,
   }) {
     return _authPlatform.webAndDesktopInitialize(
       appId: appId,

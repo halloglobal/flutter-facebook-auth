@@ -16,7 +16,7 @@ String generateNonce([int length = 32]) {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -24,9 +24,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _auth = FacebookAuth.instance;
-  String? _nonce;
+  String _nonce;
 
-  late LoginPageState _state;
+  LoginPageState _state;
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
           userId: data['id'],
           accessToken: accessToken,
           name: data['name'],
-          pictureProfile: data['picture']?['data']?['url'],
+          pictureProfile: data['picture']['data']['url'],
           email: data['email'],
         ),
       );
@@ -98,15 +98,16 @@ class _LoginPageState extends State<LoginPage> {
 
     switch (result.status) {
       case LoginStatus.success:
-        await _getUserProfile(result.accessToken!);
+        await _getUserProfile(result.accessToken);
+        break;
       case LoginStatus.cancelled:
-      case _:
-        log(
-          '${result.status.name}: ${result.message}',
-        );
-        setState(() {
-          _state = LoginNotAuthenticated();
-        });
+        break;
+      case LoginStatus.failed:
+        // TODO: Handle this case.
+        break;
+      case LoginStatus.operationInProgress:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -118,27 +119,18 @@ class _LoginPageState extends State<LoginPage> {
         height: double.infinity,
         child: SafeArea(
           child: Center(
-            child: switch (_state) {
-              LoginLoading() => CircularProgressIndicator(),
-              LoginNotAuthenticated() => ElevatedButton(
+            child:  _state is LoginLoading ? CircularProgressIndicator() : _state is LoginNotAuthenticated ? ElevatedButton(
                   onPressed: _login,
                   child: Text('Login'),
-                ),
-              LoginSuccessful(user: final user) => ListView(
+                ) : ListView(
                   padding: EdgeInsets.all(20),
                   children: [
                     ElevatedButton(
                       onPressed: _logout,
                       child: Text('Log Out'),
                     ),
-                    Text(
-                      prettyPrint(
-                        user.toJson(),
-                      ),
-                    ),
                   ],
                 ),
-            },
           ),
         ),
       ),
@@ -147,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 // Abstract base class representing login page states
-sealed class LoginPageState {}
+abstract class LoginPageState {}
 
 // State representing the login page is loading
 class LoginLoading extends LoginPageState {}
@@ -166,15 +158,15 @@ class User {
   final String userId;
   final AccessToken accessToken;
   final String name;
-  final String? pictureProfile;
-  final String? email;
+  final String pictureProfile;
+  final String email;
 
   User({
-    required this.userId,
-    required this.accessToken,
-    required this.name,
-    required this.pictureProfile,
-    required this.email,
+    @required this.userId,
+    @required this.accessToken,
+    @required this.name,
+    @required this.pictureProfile,
+    @required this.email,
   });
 
   Map<String, dynamic> toJson() => {
