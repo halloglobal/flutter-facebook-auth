@@ -1,3 +1,4 @@
+
 /// this class is used to saved the granted and declined permissions after login
 class FacebookPermissions {
   /// save the granted permissions by the user

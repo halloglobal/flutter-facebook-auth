@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 const maxMillisecondsSinceEpoch = 8640000000000000;
 const minMillisecondsSinceEpoch = -8640000000000000;
 
@@ -18,7 +20,7 @@ abstract class AccessToken {
 class LimitedToken extends AccessToken {
   final String userId;
   final String userName;
-  final String? userEmail;
+  final String userEmail;
   final String nonce;
 
   LimitedToken({
@@ -71,8 +73,8 @@ class ClassicToken extends AccessToken {
   final String? authenticationToken;
 
   ClassicToken({
-    required this.declinedPermissions,
-    required this.grantedPermissions,
+    @required this.declinedPermissions,
+    @required this.grantedPermissions,
     required this.userId,
     required this.expires,
     required super.tokenString,
